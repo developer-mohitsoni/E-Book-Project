@@ -15,8 +15,12 @@
   "author": "Mohit Soni <ms7085422@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.9.1",
     "@types/node": "^22.5.1",
+    "eslint": "^9.9.1",
+    "globals": "^15.9.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.3.0"
   }
 }
