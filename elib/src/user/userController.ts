@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import createHttpError from "http-errors";
 import User from "./userModel";
+import bcrypt, { genSalt } from "bcrypt";
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
     // Validation
     const { name, email, password } = req.body;
@@ -23,6 +24,10 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
         return next(error);
     }
+
+    // password -> hash
+    const salt = await genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
     // Process
     // Response
     res.json({
