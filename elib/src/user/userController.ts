@@ -5,6 +5,8 @@ import { sign } from "jsonwebtoken";
 import { config } from "../config/config";
 import { User } from "./userTypes";
 import userModel from "./userModel";
+
+// Create User
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
     // Validation
     const { name, email, password } = req.body;
@@ -60,7 +62,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
             }
         );
         // Response
-        res.json({
+        res.status(201).json({
             accessToken: token,
         });
     } catch (err) {
