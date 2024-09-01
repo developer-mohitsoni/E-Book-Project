@@ -23,7 +23,7 @@ app.get("/", (req, res, next) => {
 });
 
 app.use("/api/users", userRouter);
-app.use("/api/books", bookRouter);
+app.use("/api/books",bookRouter);
 
 // Global Error Handler
 app.use(globalErrorHandler);
