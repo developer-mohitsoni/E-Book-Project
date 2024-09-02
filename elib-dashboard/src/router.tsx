@@ -5,6 +5,10 @@ import RegisterPage from "./pages/RegisterPage";
 
 export const router = createBrowserRouter([
   {
+    path: "home",
+    element: <HomePage />,
+  },
+  {
     path: "/",
     element: <HomePage />,
   },
