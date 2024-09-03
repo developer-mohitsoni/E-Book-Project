@@ -11,11 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login } from "@/http/api";
 import { useMutation } from "@tanstack/react-query";
+import { Loader } from "lucide-react";
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -24,7 +25,7 @@ const LoginPage = () => {
     onSuccess: () => {
       console.log("Login Successful");
 
-      navigate('/dashboard/home')
+      navigate("/dashboard/home");
     },
   });
 
@@ -49,6 +50,7 @@ const LoginPage = () => {
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
             Enter your email below to login to your account.
+            {mutation.isPending && <div>Loading...</div>}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
@@ -69,8 +71,15 @@ const LoginPage = () => {
         </CardContent>
         <CardFooter>
           <div className="w-full">
-            <Button className="w-full" onClick={handleLoginSubmit}>
-              Sign in
+            <Button
+              className="w-full flex gap-4"
+              onClick={handleLoginSubmit}
+              disabled={mutation.isPending}
+            >
+              <span>Sign in</span>
+              {mutation.isPending && (
+                <Loader className={mutation.isPending ? "animate-spin" : ""} />
+              )}
             </Button>
 
             <div className="mt-4 text-center text-sm">
