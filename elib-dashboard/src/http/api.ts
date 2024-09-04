@@ -1,5 +1,4 @@
 import { config } from "@/config/config";
-import useTokenStore from "@/store";
 import axios from "axios";
 
 const api = axios.create({
