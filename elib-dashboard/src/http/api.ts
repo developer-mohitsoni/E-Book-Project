@@ -1,4 +1,5 @@
 import { config } from "@/config/config";
+import useTokenStore from "@/store";
 import axios from "axios";
 
 const api = axios.create({
@@ -8,10 +9,11 @@ const api = axios.create({
   },
 });
 
-export const login = async (data: { email: string; password: string }) => {
-  return api.post("/api/users/login", data);
-};
+export const login = async (data: { email: string; password: string }) =>
+  api.post("/api/users/login", data);
 
-export const register = async(data: {name: string; email: string; password: string}) =>{
-  return api.post("/api/users/register", data);
-}
+export const register = async (data: {
+  name: string;
+  email: string;
+  password: string;
+}) => api.post("/api/users/register", data);
