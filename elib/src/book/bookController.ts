@@ -1,21 +1,18 @@
-import { Request, Response, NextFunction } from "express";
-import createHttpError from "http-errors";
-import cloudinary from "../config/cloudinary";
 import path from "node:path";
 import fs from "node:fs";
+import { Request, Response, NextFunction } from "express";
+import cloudinary from "../config/cloudinary";
+import createHttpError from "http-errors";
 import bookModel from "./bookModel";
 import { AuthRequest } from "../middlewares/authenticate";
 
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
-    const { title, genre } = req.body;
-    // console.log("files", req.files);
+    const { title, genre, description } = req.body;
 
-    const files = req.files as { [fileName: string]: Express.Multer.File[] };
-
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    // 'application/pdf'
     const coverImageMimeType = files.coverImage[0].mimetype.split("/").at(-1);
-
     const fileName = files.coverImage[0].filename;
-
     const filePath = path.resolve(
         __dirname,
         "../../public/data/uploads",
@@ -45,26 +42,25 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
                 format: "pdf",
             }
         );
-
         const _req = req as AuthRequest;
 
+        console.log("User Id:", _req.userId);
+
         const newBook = await bookModel.create({
-            title: title,
-            genre: genre,
+            title,
+            description,
+            genre,
             author: _req.userId,
             coverImage: uploadResult.secure_url,
             file: bookFileUploadResult.secure_url,
         });
 
-        // Delete temp files
-
-        //todo: wrap in try catch...
+        // Delete temp.files
+        // todo: wrap in try catch...
         await fs.promises.unlink(filePath);
         await fs.promises.unlink(bookFilePath);
 
-        res.status(201).json({
-            id: newBook._id,
-        });
+        res.status(201).json({ id: newBook._id });
     } catch (err) {
         console.log(err);
         return next(createHttpError(500, "Error while uploading the files."));
@@ -151,9 +147,11 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const listBooks = async (req: Request, res: Response, next: NextFunction) => {
+    // const sleep = await new Promise((resolve) => setTimeout(resolve, 5000));
+
     try {
         // todo: add pagination.
-        const book = await bookModel.find();
+        const book = await bookModel.find().populate("author", "_id name");
         res.json(book);
     } catch (err) {
         return next(createHttpError(500, "Error while getting a book"));
@@ -168,7 +166,10 @@ const getSingleBook = async (
     const bookId = req.params.bookId;
 
     try {
-        const book = await bookModel.findOne({ _id: bookId });
+        const book = await bookModel
+            .findOne({ _id: bookId })
+            // populate author field
+            .populate("author", "_id name");
         if (!book) {
             return next(createHttpError(404, "Book not found."));
         }
@@ -183,7 +184,6 @@ const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
     const bookId = req.params.bookId;
 
     const book = await bookModel.findOne({ _id: bookId });
-
     if (!book) {
         return next(createHttpError(404, "Book not found"));
     }
@@ -193,8 +193,6 @@ const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
     if (book.author.toString() !== _req.userId) {
         return next(createHttpError(403, "You can not update others book."));
     }
-    // book-covers/t3nmjbkj6nhfgy1rcjor
-    // https://res.cloudinary.com/developer-mohit/image/upload/v1725195770/book-covers/yj8c2bdocbzcfmvnxvdu.jpg
 
     const coverFileSplits = book.coverImage.split("/");
     const coverImagePublicId =

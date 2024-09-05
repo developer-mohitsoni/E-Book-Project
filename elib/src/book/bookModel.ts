@@ -7,8 +7,13 @@ const bookSchema = new mongoose.Schema<Book>(
             type: String,
             required: true,
         },
+        description: {
+            type: String,
+            require: true,
+        },
         author: {
             type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
             required: true,
         },
         coverImage: {
@@ -17,7 +22,7 @@ const bookSchema = new mongoose.Schema<Book>(
         },
         file: {
             type: String,
-            required: true,
+            requied: true,
         },
         genre: {
             type: String,
