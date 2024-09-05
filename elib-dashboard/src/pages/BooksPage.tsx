@@ -34,10 +34,9 @@ import {
 import { getBooks } from "@/http/api";
 import { Book } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { Key, MoreHorizontal } from "lucide-react";
+import { CirclePlus, Key, MoreHorizontal } from "lucide-react";
 
 const BooksPage = () => {
-
   //todo: add loading spinner and error message
   const { data, isLoading, isError } = useQuery({
     queryKey: ["books"],
@@ -50,17 +49,24 @@ const BooksPage = () => {
 
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/home">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <div className="flex justify-between items-center">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard/home">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
+        <Button>
+          <CirclePlus size={20} />
+          <span className="ml-2">Add Book</span>
+        </Button>
+      </div>
       <Card className="">
         <CardHeader>
           <CardTitle>Books</CardTitle>
@@ -101,9 +107,7 @@ const BooksPage = () => {
                         width="64"
                       />
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {book.title}
-                    </TableCell>
+                    <TableCell className="font-medium">{book.title}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{book.genre}</Badge>
                     </TableCell>
