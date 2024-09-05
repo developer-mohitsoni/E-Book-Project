@@ -35,6 +35,7 @@ import { getBooks } from "@/http/api";
 import { Book } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { CirclePlus, Key, MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const BooksPage = () => {
   //todo: add loading spinner and error message
@@ -62,10 +63,12 @@ const BooksPage = () => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Button>
-          <CirclePlus size={20} />
-          <span className="ml-2">Add Book</span>
-        </Button>
+        <Link to={"/dashboard/books/create"}>
+          <Button>
+            <CirclePlus size={20} />
+            <span className="ml-2">Add Book</span>
+          </Button>
+        </Link>
       </div>
       <Card className="">
         <CardHeader>
