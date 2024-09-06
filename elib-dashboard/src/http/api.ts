@@ -39,3 +39,17 @@ export const createBook = async (data: FormData) => {
     },
   });
 };
+
+export const getBooksById = async (bookId: string) => {
+  const response = await api.get(`/api/books/${bookId}`);
+
+  return response.data;
+};
+
+// export const updateBookById = async (data: FormData, bookId: string) => {
+//   api.put(`/api/books/${bookId}`, data, {
+//     headers: {
+//       "Content-Type": "multipart/form-data",
+//     },
+//   });
+// };
