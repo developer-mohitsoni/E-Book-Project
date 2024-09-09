@@ -28,15 +28,15 @@ const formSchema = z.object({
   coverImage: z
     .instanceof(FileList)
     .optional()
-    .refine((file) => file.length === 0 || file.length === 1, {
+    .refine((file) => (file as FileList).length === 0 || (file as FileList).length === 1, {
       message: "Cover Image is required if selected",
     }),
   file: z
-    .instanceof(FileList)
-    .optional()
-    .refine((file) => file.length === 0 || file.length === 1, {
-      message: "Book PDF is required if selected",
-    }),
+      .instanceof(FileList)
+      .optional()
+      .refine((file) => (file as FileList).length === 0 || (file as FileList).length === 1, {
+        message: "Book PDF is required if selected",
+      }),
 });
 
 export default formSchema;
