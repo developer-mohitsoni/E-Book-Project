@@ -4,7 +4,7 @@ import connectDB from "./src/config/db";
 
 const startServer = () => {
     // Connect Database
-    connectDB()
+    connectDB();
     const PORT = config.port || 3000;
 
     app.listen(PORT, () => {

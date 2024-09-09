@@ -16,7 +16,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const token = authHeader.split(" ")[1];
-        
+
         const decoded = verify(token, config.jwtSecret as string);
 
         // console.log("decoded", decoded);
@@ -26,6 +26,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
         _req.userId = decoded.sub as string;
 
         next();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
         return next(createHttpError(401, "Token expired."));
     }

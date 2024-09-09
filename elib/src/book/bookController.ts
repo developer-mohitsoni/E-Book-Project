@@ -162,6 +162,7 @@ const listBooks = async (req: Request, res: Response, next: NextFunction) => {
             .populate("author", "_id name");
 
         res.json(book);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
         return next(createHttpError(500, "Error while getting a book"));
     }
@@ -184,6 +185,7 @@ const getSingleBook = async (
         }
 
         return res.json(book);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
         return next(createHttpError(500, "Error while getting a book"));
     }

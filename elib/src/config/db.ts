@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { config } from "./config";
 
-const connectDB =  () => {
+const connectDB = () => {
     try {
         const mongoURL = config.databaseURL as string;
         mongoose.connect(mongoURL);

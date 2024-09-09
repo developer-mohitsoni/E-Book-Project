@@ -30,7 +30,8 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
             return next(error);
         }
-    } catch (err) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
         return next(createHttpError(500, "Error while getting user"));
     }
 
@@ -46,6 +47,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
             email: email,
             password: hashPassword,
         });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
         return next(createHttpError(500, "Error while creating user"));
     }
@@ -65,6 +67,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
         res.status(201).json({
             accessToken: token,
         });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
         return next(createHttpError(500, "Error while signing the jwt token"));
     }
