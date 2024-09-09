@@ -23,10 +23,8 @@ app.use(
 
 // app.use();
 
-app.get("/", (req, res) => {
-    res.send({
-        message: "Welcome to elib apis",
-    });
+app.get("/", (req, res, next) => {
+    res.send("Welcome to elib apis");
 });
 
 app.use("/api/users", userRouter);
