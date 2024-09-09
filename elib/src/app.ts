@@ -24,7 +24,7 @@ app.use(
 // app.use();
 
 app.get("/", (req, res) => {
-    res.json({
+    res.send({
         message: "Welcome to elib apis",
     });
 });
