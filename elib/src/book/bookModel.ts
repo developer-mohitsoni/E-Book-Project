@@ -28,6 +28,10 @@ const bookSchema = new mongoose.Schema<Book>(
             type: String,
             required: true,
         },
+        price: {
+            type: String,
+            required: true,
+        },
     },
     { timestamps: true }
 );

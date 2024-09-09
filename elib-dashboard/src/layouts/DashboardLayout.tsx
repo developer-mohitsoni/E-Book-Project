@@ -27,19 +27,33 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link, Navigate, NavLink, Outlet } from "react-router-dom";
 import useTokenStore from "@/store";
+import { useTheme } from "@/pages/theme-provider";
+// import { useEffect } from "react";
 
 const DashboardLayout = () => {
   const { token, setToken } = useTokenStore((state) => state);
+  // const { theme, toggleTheme } = useThemeStore((state) => state); // Get theme state
 
   if (!token) {
     return <Navigate to={"/auth/login"} replace />;
   }
+
+  // const {theme, setTheme } = useTheme();
 
   const logout = () => {
     console.log("Logging Out");
 
     setToken("");
   };
+
+  // useEffect(() => {
+  //   const root = window.document.documentElement;
+  //   if (theme === "dark") {
+  //     root.classList.add("dark");
+  //   } else {
+  //     root.classList.remove("dark");
+  //   }
+  // }, [theme]); // Run this effect when the theme changes
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -81,22 +95,6 @@ const DashboardLayout = () => {
               </NavLink>
             </nav>
           </div>
-          <div className="mt-auto p-4">
-            <Card x-chunk="dashboard-02-chunk-0">
-              <CardHeader className="p-2 pt-0 md:p-4">
-                <CardTitle>Upgrade to Pro</CardTitle>
-                <CardDescription>
-                  Unlock all features and get unlimited access to our support
-                  team.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-                <Button size="sm" className="w-full">
-                  Upgrade
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </div>
       <div className="flex flex-col">
@@ -136,22 +134,6 @@ const DashboardLayout = () => {
                   Books
                 </Link>
               </nav>
-              <div className="mt-auto">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Upgrade to Pro</CardTitle>
-                    <CardDescription>
-                      Unlock all features and get unlimited access to our
-                      support team.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button size="sm" className="w-full">
-                      Upgrade
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
             </SheetContent>
           </Sheet>
           <div className="w-full flex-1">
@@ -175,9 +157,6 @@ const DashboardLayout = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Button variant={"destructive"} onClick={logout}>

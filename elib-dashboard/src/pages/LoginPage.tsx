@@ -11,13 +11,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login } from "@/http/api";
 import useTokenStore from "@/store";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LoaderCircle } from "lucide-react";
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient(); // Get query client instance
   const setToken = useTokenStore((state) => state.setToken);
 
   const emailRef = useRef<HTMLInputElement>(null);
@@ -28,6 +29,7 @@ const LoginPage = () => {
     onSuccess: (response) => {
       setToken(response.data.accessToken);
       navigate("/dashboard/home");
+      queryClient.invalidateQueries(); // Invalidate all queries to refresh data
     },
   });
 

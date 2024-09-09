@@ -34,10 +34,10 @@ export const router = createBrowserRouter([
         path: "books/:bookId",
         element: <BookInfo />,
       },
-      // {
-      //   path: "books/update/:bookId",
-      //   element: <UpdateBook />,
-      // },
+      {
+        path: "books/update/:bookId",
+        element: <UpdateBook />,
+      },
     ],
   },
   {

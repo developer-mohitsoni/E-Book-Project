@@ -12,7 +12,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -31,19 +30,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getBooks } from "@/http/api";
+import { deleteBookById, getBooks } from "@/http/api";
 import { Book } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import { CirclePlus, Key, MoreHorizontal } from "lucide-react";
+import copyToClipboard from "@/utils/CopyClipboard";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CirclePlus, LoaderCircle, MoreHorizontal } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 const BooksPage = () => {
-  //todo: add loading spinner and error message
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["books"],
     queryFn: getBooks,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (bookId: string) => deleteBookById(bookId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["books"]);
+    },
   });
 
   if (!isLoading) {
@@ -52,14 +59,35 @@ const BooksPage = () => {
 
   const handleEdit = (e: Event, bookId: string) => {
     e.stopPropagation();
-    // navigate(`/dashboard/books/update/${bookId}`);
+    navigate(`/dashboard/books/update/${bookId}`);
     console.log("Edit Book");
   };
 
-  const handleDelete = (e: Event, bookId: string) => {
+  const handleDelete = (e: React.MouseEvent, bookId?: string) => {
     e.stopPropagation();
-    // navigate(`/dashboard/books/${bookId}`);
-    console.log("Delete Book");
+    if (!bookId) {
+      console.error("bookId is undefined");
+      return;
+    }
+
+    deleteMutation.mutate(bookId);
+  };
+
+  const handleShare = (e: React.MouseEvent, book: Book) => {
+    e.stopPropagation();
+    const bookUrl = `${window.location.origin}/dashboard/books/${book._id}`;
+    if (navigator.share) {
+      navigator
+        .share({
+          title: book.title,
+          text: `Check out this book: ${book.title} by ${book?.author.name}`,
+          url: bookUrl,
+        })
+        .then(() => console.log("Share successful"))
+        .catch((error) => console.error("Error sharing", error));
+    } else {
+      copyToClipboard(bookUrl);
+    }
   };
 
   return (
@@ -136,7 +164,7 @@ const BooksPage = () => {
                         <Badge variant="outline">{book.genre}</Badge>
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
-                        {book.author.name}
+                        {book?.author.name}
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
                         {book.createdAt}
@@ -162,8 +190,25 @@ const BooksPage = () => {
                             >
                               Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleDelete}>
-                              Delete
+                            <DropdownMenuItem
+                              onClick={(e: React.MouseEvent) =>
+                                handleShare(e, book)
+                              }
+                            >
+                              Share
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={(e: Event) => handleDelete(e, book._id)}
+                            >
+                              {deleteMutation.isPending ? (
+                                <span>Deleting...</span>
+                              ) : (
+                                <span>Delete</span>
+                              )}
+                              {deleteMutation.isPending && (
+                                <LoaderCircle className="animate-spin ml-2" />
+                              )}
+                              {/* Show loading spinner */}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -175,11 +220,6 @@ const BooksPage = () => {
             </TableBody>
           </Table>
         </CardContent>
-        <CardFooter>
-          <div className="text-xs text-muted-foreground">
-            Showing <strong>1-10</strong> of <strong>32</strong> products
-          </div>
-        </CardFooter>
       </Card>
     </>
   );

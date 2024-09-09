@@ -1,5 +1,6 @@
 import { config } from "@/config/config";
 import useTokenStore from "@/store";
+import { Book } from "@/types";
 import axios from "axios";
 
 const api = axios.create({
@@ -43,13 +44,18 @@ export const createBook = async (data: FormData) => {
 export const getBooksById = async (bookId: string) => {
   const response = await api.get(`/api/books/${bookId}`);
 
-  return response.data;
+  return response.data as Book;
 };
 
-// export const updateBookById = async (data: FormData, bookId: string) => {
-//   api.put(`/api/books/${bookId}`, data, {
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   });
-// };
+export const updateBookById = async (bookId: string, data: FormData) => {
+  api.put(`/api/books/${bookId}`, data, {
+    headers: {
+      "Content-Type": "m-ultipart/form-data",
+    },
+  });
+};
+
+export const deleteBookById = async (bookId: string) => {
+  const response = await api.delete(`/api/books/${bookId}`);
+  return response.data;
+};

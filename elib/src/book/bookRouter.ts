@@ -15,7 +15,7 @@ const bookRouter = express.Router();
 
 bookRouter.post("/", authMiddleware, uploadMiddleware, createBook);
 bookRouter.put("/:bookId", authMiddleware, uploadMiddleware, updateBook);
-bookRouter.get("/", listBooks);
+bookRouter.get("/", authMiddleware, listBooks);
 bookRouter.get("/:bookId", getSingleBook);
 bookRouter.delete("/:bookId", authMiddleware, deleteBook);
 

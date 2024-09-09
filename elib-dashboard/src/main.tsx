@@ -7,13 +7,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
-  defaultOptions:{
-    queries:{
-      refetchOnWindowFocus: false,
-      staleTime: 60 * 1000 * 5
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: true,
+      staleTime: 60 * 1000 * 5,
+      refetchOnMount: true,
     },
-  }
-})
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>

@@ -7,7 +7,7 @@ import bookModel from "./bookModel";
 import { AuthRequest } from "../middlewares/authenticate";
 
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
-    const { title, genre, description } = req.body;
+    const { title, genre, description, price } = req.body;
 
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     // 'application/pdf'
@@ -50,6 +50,7 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
             title,
             description,
             genre,
+            price,
             author: _req.userId,
             coverImage: uploadResult.secure_url,
             file: bookFileUploadResult.secure_url,
@@ -68,8 +69,9 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const updateBook = async (req: Request, res: Response, next: NextFunction) => {
-    const { title, description, genre } = req.body;
+    const { title, description, genre, price } = req.body;
     const bookId = req.params.bookId;
+    console.log(bookId);
 
     const book = await bookModel.findOne({ _id: bookId });
 
@@ -135,6 +137,7 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
             title: title,
             description: description,
             genre: genre,
+            price: price,
             coverImage: completeCoverImage
                 ? completeCoverImage
                 : book.coverImage,
@@ -147,11 +150,17 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const listBooks = async (req: Request, res: Response, next: NextFunction) => {
-    // const sleep = await new Promise((resolve) => setTimeout(resolve, 5000));
-
     try {
+        const _req = req as AuthRequest;
+        const userId = _req.userId; // This is the authenticated user's ID
+
+        console.log(userId);
+
         // todo: add pagination.
-        const book = await bookModel.find().populate("author", "_id name");
+        const book = await bookModel
+            .find({ author: userId })
+            .populate("author", "_id name");
+
         res.json(book);
     } catch (err) {
         return next(createHttpError(500, "Error while getting a book"));

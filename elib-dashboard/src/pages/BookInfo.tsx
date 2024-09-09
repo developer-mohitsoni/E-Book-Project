@@ -1,28 +1,11 @@
 import { getBooksById } from "@/http/api";
 import { Book } from "@/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
-
-const DownloadButton = ({ fileLink }: { fileLink: string }) => {
-  const handleDownload = () => {
-    window.open(fileLink, "_blank");
-  };
-
-  return (
-    <button
-      onClick={handleDownload}
-      className="text-white bg-blue-500 px-4 py-2 rounded-md"
-    >
-      Download
-    </button>
-  );
-};
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import DownloadButton from "@/utils/DownloadBtn";
 
 const BookInfo = () => {
   const { bookId } = useParams<{ bookId: string }>();
-
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const {
     data: book,
@@ -59,7 +42,9 @@ const BookInfo = () => {
           />
           <div>
             <h1 className="text-3xl font-bold">{book.title}</h1>
-            <p className="text-lg font-medium">by {book.author.name}</p>
+            <p className="text-lg font-medium">
+              by {book?.author?.name || " "}
+            </p>
             <p className="text-sm italic text-gray-600">
               Published on: {new Date(book.createdAt).toLocaleDateString()}
             </p>
@@ -69,6 +54,12 @@ const BookInfo = () => {
               </span>
             </div>
             <p className="mt-4">{book.description}</p>
+
+            {/* Added Price Section */}
+            <p className="mt-4 text-xl font-semibold">
+              Price:{" "}
+              <span className="text-green-600">${Number(book.price)}</span>
+            </p>
 
             <div className="mt-4 flex gap-2">
               <DownloadButton fileLink={book.file} />

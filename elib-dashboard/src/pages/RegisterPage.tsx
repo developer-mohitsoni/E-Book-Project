@@ -35,7 +35,6 @@ const RegisterPage = () => {
   });
 
   const handleRegisterSubmit = () => {
-    // This will give me my value that we are enter on input form login box
     const name = nameRef.current?.value;
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;

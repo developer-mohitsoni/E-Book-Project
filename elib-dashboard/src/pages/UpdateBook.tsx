@@ -24,60 +24,101 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { LoaderCircle } from "lucide-react";
+import { CircleX, LoaderCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createBook } from "@/http/api";
-import { Link, useNavigate } from "react-router-dom";
-import formSchema from "@/validation/formSchema";
 
-const CreateBook = () => {
+import { z } from "zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getBooksById, updateBookById } from "@/http/api";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import formSchema from "@/validation/updatedFormSchema";
+
+const UpdateBook = () => {
+  const { bookId } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data: book, isLoading } = useQuery({
+    queryKey: ["book", bookId],
+    queryFn: () => getBooksById(bookId!),
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      genre: "",
-      description: "",
-      price: "",
+      title: book?.title || "", // Default values from the fetched book
+      genre: book?.genre || "",
+      description: book?.description || "",
+      price: book?.price || "",
+    },
+    // Update form when the book data is fetched
+    values: {
+      title: book?.title || "",
+      genre: book?.genre || "",
+      description: book?.description || "",
+      price: book?.price || "",
     },
   });
 
   const coverImageRef = form.register("coverImage");
   const fileRef = form.register("file");
 
-  const queryClient = useQueryClient();
-
   const mutation = useMutation({
-    mutationFn: createBook,
+    mutationFn: (updatedData: FormData) => updateBookById(bookId!, updatedData),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["books"],
-      });
+      await queryClient.invalidateQueries(["books"]);
       await queryClient.refetchQueries(["books"]);
-      form.reset();
+      console.log("Book Updated Successfully");
       navigate("/dashboard/books");
-      console.log("Book Created Successfully");
     },
-    onError: (error: any) => {
-      console.error("Error creating book:", error);
-      alert("An error occurred while creating the book. Please try again.");
+    onError: (error) => {
+      console.error("Error updating book:", error);
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  function onSubmit(values: z.infer<typeof formSchema>) {
     const formData = new FormData();
-    formData.append("title", values.title);
-    formData.append("genre", values.genre);
-    formData.append("description", values.description);
-    formData.append("price", values.price);
-    formData.append("coverImage", values.coverImage[0]);
-    formData.append("file", values.file[0]);
+
+    //  Only append values if the user has entered something new, otherwise keep previous data
+    if (values.title && values.title !== book?.title) {
+      formData.append("title", values.title);
+    } else {
+      formData.append("title", book?.title || "");
+    }
+
+    if (values.genre && values.genre !== book?.genre) {
+      formData.append("genre", values.genre);
+    } else {
+      formData.append("genre", book?.genre || "");
+    }
+
+    if (values.description && values.description !== book?.description) {
+      formData.append("description", values.description);
+    } else {
+      formData.append("description", book?.description || "");
+    }
+
+    if (values.price && values.price !== book?.price) {
+      formData.append("price", values.price);
+    } else {
+      formData.append("price", book?.price || "");
+    }
+
+    if (values.coverImage?.[0]) {
+      formData.append("coverImage", values.coverImage[0]);
+    }
+
+    if (values.file?.[0]) {
+      formData.append("file", values.file[0]);
+    }
 
     mutation.mutate(formData);
-  };
+  }
+
+  if (isLoading) {
+    return <div>Loading book details...</div>;
+  }
 
   return (
     <>
@@ -95,7 +136,7 @@ const CreateBook = () => {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Create</BreadcrumbPage>
+                  <BreadcrumbPage>Edit</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -110,15 +151,15 @@ const CreateBook = () => {
                 {mutation.isPending && (
                   <LoaderCircle className="animate-spin" />
                 )}
-                <span className="ml-2">Submit</span>
+                <span className="ml-2">Update</span>
               </Button>
             </div>
           </div>
           <Card className="mt-4">
             <CardHeader>
-              <CardTitle>Create a new Book</CardTitle>
+              <CardTitle>Edit Book</CardTitle>
               <CardDescription>
-                Fill out the form below to create a new book.
+                Update the details of the book below.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -180,7 +221,7 @@ const CreateBook = () => {
                   name="coverImage"
                   render={() => (
                     <FormItem>
-                      <FormLabel>Upload Cover Image</FormLabel>
+                      <FormLabel>Upload New Cover Image</FormLabel>
                       <FormControl>
                         <Input
                           className="w-full"
@@ -197,7 +238,7 @@ const CreateBook = () => {
                   name="file"
                   render={() => (
                     <FormItem>
-                      <FormLabel>Upload Book PDF</FormLabel>
+                      <FormLabel>Upload New Book PDF</FormLabel>
                       <FormControl>
                         <Input
                           className="w-full"
@@ -219,4 +260,4 @@ const CreateBook = () => {
   );
 };
 
-export default CreateBook;
+export default UpdateBook;
