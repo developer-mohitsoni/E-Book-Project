@@ -3,7 +3,10 @@ export interface Book {
   title: string;
   description: string;
   genre: string;
-  author: string;
+  price: string;
+  author: {
+    name: string;
+  };
   coverImage: string;
   file: string;
   createdAt: string;
@@ -12,4 +15,8 @@ export interface Book {
 export interface Author {
   _id: string;
   name: string;
+}
+
+export interface RegisterResponse {
+  accessToken: string;
 }

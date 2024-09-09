@@ -41,7 +41,7 @@ const BooksPage = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<Book[]>({
     queryKey: ["books"],
     queryFn: getBooks,
   });
@@ -49,7 +49,7 @@ const BooksPage = () => {
   const deleteMutation = useMutation({
     mutationFn: (bookId: string) => deleteBookById(bookId),
     onSuccess: () => {
-      queryClient.invalidateQueries(["books"]);
+      queryClient.invalidateQueries({ queryKey: ["books"] });
     },
   });
 
@@ -57,7 +57,7 @@ const BooksPage = () => {
     console.log("data", data);
   }
 
-  const handleEdit = (e: Event, bookId: string) => {
+  const handleEdit = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, bookId: string) => {
     e.stopPropagation();
     navigate(`/dashboard/books/update/${bookId}`);
     console.log("Edit Book");
@@ -184,7 +184,7 @@ const BooksPage = () => {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
-                              onClick={(e: Event) => {
+                              onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                                 handleEdit(e, book._id);
                               }}
                             >
@@ -198,7 +198,7 @@ const BooksPage = () => {
                               Share
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={(e: Event) => handleDelete(e, book._id)}
+                              onClick={(e: React.MouseEvent) => handleDelete(e, book._id)}
                             >
                               {deleteMutation.isPending ? (
                                 <span>Deleting...</span>

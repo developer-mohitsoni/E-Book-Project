@@ -28,7 +28,7 @@ const RegisterPage = () => {
     onSuccess: (response) => {
       console.log("Register Successful");
 
-      setToken(response.data.accessToken);
+      setToken(response.accessToken);
 
       navigate("/dashboard/home");
     },

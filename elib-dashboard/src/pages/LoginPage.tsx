@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login } from "@/http/api";
 import useTokenStore from "@/store";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, MutationFunction } from "@tanstack/react-query";
 import { LoaderCircle } from "lucide-react";
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,8 +25,8 @@ const LoginPage = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const mutation = useMutation({
-    mutationFn: login,
-    onSuccess: (response) => {
+    mutationFn: login as MutationFunction<{ data: { accessToken: string } }, { email: string; password: string }>,
+    onSuccess: (response: { data: { accessToken: string } }) => {
       setToken(response.data.accessToken);
       navigate("/dashboard/home");
       queryClient.invalidateQueries(); // Invalidate all queries to refresh data

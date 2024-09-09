@@ -9,13 +9,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -27,33 +20,19 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link, Navigate, NavLink, Outlet } from "react-router-dom";
 import useTokenStore from "@/store";
-import { useTheme } from "@/pages/theme-provider";
-// import { useEffect } from "react";
 
 const DashboardLayout = () => {
   const { token, setToken } = useTokenStore((state) => state);
-  // const { theme, toggleTheme } = useThemeStore((state) => state); // Get theme state
 
   if (!token) {
     return <Navigate to={"/auth/login"} replace />;
   }
-
-  // const {theme, setTheme } = useTheme();
 
   const logout = () => {
     console.log("Logging Out");
 
     setToken("");
   };
-
-  // useEffect(() => {
-  //   const root = window.document.documentElement;
-  //   if (theme === "dark") {
-  //     root.classList.add("dark");
-  //   } else {
-  //     root.classList.remove("dark");
-  //   }
-  // }, [theme]); // Run this effect when the theme changes
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">

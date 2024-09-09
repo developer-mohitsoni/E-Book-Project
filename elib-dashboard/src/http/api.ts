@@ -1,6 +1,6 @@
 import { config } from "@/config/config";
 import useTokenStore from "@/store";
-import { Book } from "@/types";
+import { Book, RegisterResponse } from "@/types";
 import axios from "axios";
 
 const api = axios.create({
@@ -13,7 +13,11 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = useTokenStore.getState().token;
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    if (config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      config.headers = { Authorization: `Bearer ${token}` };
+    }
   }
   return config;
 });
@@ -25,12 +29,16 @@ export const register = async (data: {
   name: string;
   email: string;
   password: string;
-}) => api.post("/api/users/register", data);
+}): Promise<RegisterResponse> =>{
+  const response = await api.post("/api/users/register", data);
 
-export const getBooks = async () => {
+  return response.data as RegisterResponse;
+}
+
+export const getBooks = async (): Promise<Book[]> => {
   const response = await api.get("/api/books");
 
-  return response.data;
+  return response.data as Book[];
 };
 
 export const createBook = async (data: FormData) => {

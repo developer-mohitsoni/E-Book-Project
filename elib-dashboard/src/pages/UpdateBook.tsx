@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CircleX, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -67,8 +67,8 @@ const UpdateBook = () => {
   const mutation = useMutation({
     mutationFn: (updatedData: FormData) => updateBookById(bookId!, updatedData),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["books"]);
-      await queryClient.refetchQueries(["books"]);
+      await queryClient.invalidateQueries({ queryKey: ["books"] });
+      await queryClient.refetchQueries({ queryKey: ["books"] });
       console.log("Book Updated Successfully");
       navigate("/dashboard/books");
     },

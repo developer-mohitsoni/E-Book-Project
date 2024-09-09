@@ -56,12 +56,12 @@ const CreateBook = () => {
       await queryClient.invalidateQueries({
         queryKey: ["books"],
       });
-      await queryClient.refetchQueries(["books"]);
+      await queryClient.refetchQueries({ queryKey: ["books"] });
       form.reset();
       navigate("/dashboard/books");
       console.log("Book Created Successfully");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Error creating book:", error);
       alert("An error occurred while creating the book. Please try again.");
     },
