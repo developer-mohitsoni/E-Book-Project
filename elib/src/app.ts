@@ -10,10 +10,10 @@ const app = express();
 // CORS Configuration
 app.use(
     cors({
-        origin: config.frontendDomain || "*", // Use frontend domain from config
+        origin: "https://e-book-client-roan.vercel.app", // Use frontend domain from config
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight
         allowedHeaders: ["Content-Type", "Authorization"], // Match request headers
-        // credentials: true, // Enable credentials (cookies, etc.)
+        credentials: true, // Enable credentials (cookies, etc.)
         optionsSuccessStatus: 200, // HTTP status code for preflight, 204 (No Content) is more common
     })
 );
