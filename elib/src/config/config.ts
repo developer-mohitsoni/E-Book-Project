@@ -8,7 +8,7 @@ const _config = {
     cloudinaryCloud: process.env.CLOUDINARY_CLOUD,
     cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
     cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
-    frontendDomain: process.env.FRONTEND_DOMAIN,
+    frontendDomain: process.env.FRONTEND_DOMAIN || "http://localhost:5173",
 };
 // Make config readonly that's why use Object.freeze
 export const config = Object.freeze(_config);
