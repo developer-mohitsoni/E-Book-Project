@@ -15,7 +15,7 @@ app.use(
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true, // Enable credentials (cookies, etc.)
         // preflightContinue: true, // Enable preflight requests
-        // optionsSuccessStatus: 200, // HTTP status code for successful preflight requests
+        optionsSuccessStatus: 200, // HTTP status code for successful preflight requests
     })
 );
 
