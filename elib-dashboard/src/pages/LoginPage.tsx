@@ -11,7 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login } from "@/http/api";
 import useTokenStore from "@/store";
-import { useMutation, useQueryClient, MutationFunction } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  MutationFunction,
+} from "@tanstack/react-query";
 import { LoaderCircle } from "lucide-react";
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,7 +29,10 @@ const LoginPage = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const mutation = useMutation({
-    mutationFn: login as MutationFunction<{ data: { accessToken: string } }, { email: string; password: string }>,
+    mutationFn: login as MutationFunction<
+      { data: { accessToken: string } },
+      { email: string; password: string }
+    >,
     onSuccess: (response: { data: { accessToken: string } }) => {
       setToken(response.data.accessToken);
       navigate("/dashboard/home");
@@ -67,6 +74,7 @@ const LoginPage = () => {
               type="email"
               placeholder="m@example.com"
               required
+              autoComplete="email"
             />
           </div>
           <div className="grid gap-2">

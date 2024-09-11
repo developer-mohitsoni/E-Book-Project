@@ -76,6 +76,7 @@ const RegisterPage = () => {
                 type="email"
                 placeholder="m@example.com"
                 required
+                autoComplete="email"
               />
             </div>
             <div className="grid gap-2">
