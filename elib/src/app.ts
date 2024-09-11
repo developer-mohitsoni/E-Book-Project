@@ -14,7 +14,7 @@ app.use(
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight
         allowedHeaders: ["Content-Type", "Authorization"], // Match request headers
         credentials: true, // Enable credentials (cookies, etc.)
-        optionsSuccessStatus: 204, // HTTP status code for preflight, 204 (No Content) is more common
+        optionsSuccessStatus: 200, // HTTP status code for preflight, 204 (No Content) is more common
     })
 );
 
