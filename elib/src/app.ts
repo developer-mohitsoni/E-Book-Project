@@ -7,15 +7,18 @@ import { config } from "./config/config";
 
 const app = express();
 
+// CORS Configuration
 app.use(
     cors({
-        origin: config.frontendDomain,
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        origin: config.frontendDomain || "*", // Allow specific frontend domain
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight
         allowedHeaders: ["Content-Type", "Authorization"],
-        credentials: true,
-        
+        credentials: true, // Enable credentials (cookies, etc.)
+        // preflightContinue: true, // Enable preflight requests
+        // optionsSuccessStatus: 200, // HTTP status code for successful preflight requests
     })
 );
+
 app.use(express.json());
 app.use(
     express.urlencoded({
@@ -23,10 +26,10 @@ app.use(
     })
 );
 
+// Handle Preflight (OPTIONS) Requests
+app.options("*", cors()); // Preflight requests handled by CORS
+
 // Routes
-
-// app.use();
-
 app.get("/", (req, res, next) => {
     res.send("Welcome to elib apis");
 });
