@@ -10,28 +10,22 @@ const app = express();
 // CORS Configuration
 app.use(
     cors({
-        origin: config.frontendDomain, // Use the frontend domain from config
+        origin: config.frontendDomain, // Use frontend domain from config
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight
-        allowedHeaders: ["Content-Type", "Authorization"], // Ensure these match the request headers
+        allowedHeaders: ["Content-Type", "Authorization"], // Match request headers
         credentials: true, // Enable credentials (cookies, etc.)
-        optionsSuccessStatus: 200, // HTTP status code for successful preflight requests
+        optionsSuccessStatus: 204, // HTTP status code for preflight, 204 (No Content) is more common
     })
 );
 
 app.use(express.json());
-app.use(
-    express.urlencoded({
-        extended: false,
-    })
-);
+app.use(express.urlencoded({ extended: false }));
 
-// Handle Preflight (OPTIONS) Requests
-app.options("*", (req, res) => {
-    res.sendStatus(200); // Explicitly respond with 200 for preflight requests
-});
+// Handle Preflight (OPTIONS) Requests Globally
+app.options("*", cors()); // Automatically respond to preflight with CORS headers
 
 // Routes
-app.get("/", (req, res, next) => {
+app.get("/", (req, res) => {
     res.send("Welcome to elib apis");
 });
 
