@@ -10,11 +10,10 @@ const app = express();
 // CORS Configuration
 app.use(
     cors({
-        origin: config.frontendDomain || "*", // Allow specific frontend domain
+        origin: config.frontendDomain, // Use the frontend domain from config
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: ["Content-Type", "Authorization"], // Ensure these match the request headers
         credentials: true, // Enable credentials (cookies, etc.)
-        // preflightContinue: true, // Enable preflight requests
         optionsSuccessStatus: 200, // HTTP status code for successful preflight requests
     })
 );
@@ -27,7 +26,9 @@ app.use(
 );
 
 // Handle Preflight (OPTIONS) Requests
-app.options("*", cors()); // Preflight requests handled by CORS
+app.options("*", (req, res) => {
+    res.sendStatus(200); // Explicitly respond with 200 for preflight requests
+});
 
 // Routes
 app.get("/", (req, res, next) => {
