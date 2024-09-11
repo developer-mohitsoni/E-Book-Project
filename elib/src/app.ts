@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Handle Preflight (OPTIONS) Requests Globally
-// app.options("*", cors()); // Automatically respond to preflight with CORS headers
+app.options("*", cors()); // Automatically respond to preflight with CORS headers
 
 // Routes
 app.get("/", (req, res) => {
